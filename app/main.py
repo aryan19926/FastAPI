@@ -1,28 +1,12 @@
 # python3 -m venv venv --> create virtual environment
 # uvicorn main:app --port 8080 --reload
 
-
 # crud operations
 
 # create -- POST -- to create a resource  /posts
 # read -- GET -- to read a resource  /posts/{id} or /posts
 # update -- PUT/PATCH -- to update a resource ( put is used to replace the entire resource, patch is used to update a part of the resource) /posts/{id}
 # delete -- DELETE -- to delete a resource /posts/{id}
-
-
-
-# -- SELECT name AS product_name from public.products WHERE id=1;
-# -- SELECT id AS product_id FROM products WHERE id IN (1,2,3);
-# -- SELECT * FROM products WHERE id IN (1,2,3);
-# -- SELECT * FROM products WHERE name LIKE 'P%';
-# -- SELECT * FROM products ORDER BY inventory DESC, price;
-# -- SELECT * FROM products ORDER BY inventory DESC, price LIMIT 3;
-# -- SELECT * FROM products ORDER BY inventory DESC, price LIMIT 3 OFFSET 2;
-# -- INSERT INTO products ( name, price, inventory ) VALUES ( 'keyboard', 25, 36);
-
-# -- INSERT INTO products ( name, price, inventory ) VALUES ( 'keyboard', 25, 36) returning *;
-# -- UPDATE products SET name = 'mouse' where id=8;
-# -- select * from products;
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
