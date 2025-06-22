@@ -1,4 +1,4 @@
-from .. import models, schemas
+from .. import models, schemas, oauth2
 from ..database import get_db
 from ..utils import hash
 from sqlalchemy.orm import Session
@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user)):
     hashed_password = hash(user.password)
     user.password = hashed_password
     new_user = models.User(**user.model_dump())
@@ -24,7 +24,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 @router.get("/{id}", response_model=schemas.UserResponse)
-def get_user(id: int, db: Session = Depends(get_db)):
+def get_user(id: int, db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user)):
     user = db.query(models.User).filter(models.User.id == id).first()
     if user == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} was not found")
