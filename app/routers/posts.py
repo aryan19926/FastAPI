@@ -30,7 +30,7 @@ async def get_post(id: int, db: Session = Depends(get_db), current_user: int = D
 def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)): 
     # new_post = models.Post(title=post.title, content=post.content, published=post.published)
     print(current_user.email)
-    new_post = models.Post(**post.model_dump())
+    new_post = models.Post(owner_id=current_user.id, **post.model_dump())
     db.add(new_post)
     db.commit()
     # refresh is used to get the id of the new post, post is not returned by the commit() method
