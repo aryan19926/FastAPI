@@ -46,6 +46,8 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depe
     post = db.query(models.Post).filter(models.Post.id == id)
     if post.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+    if post.first().owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
     post.delete(synchronize_session=False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -57,6 +59,8 @@ def update_post(id: int, post: schemas.PostCreate, db: Session = Depends(get_db)
     post_query = db.query(models.Post).filter(models.Post.id == id)
     if post_query.first() == None: 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+    if post_query.first().owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
     post_query.update(post.model_dump(), synchronize_session=False)
     db.commit()
     db.refresh(post_query.first())
@@ -88,7 +92,8 @@ def patch_post(id: int, post: schemas.PostUpdate, db: Session = Depends(get_db),
     post_query = db.query(models.Post).filter(models.Post.id == id)
     if post_query.first() == None: 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
-    
+    if post_query.first().owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
     update_data = post.model_dump(exclude_unset=True)
     post_query.update(update_data, synchronize_session=False)
     db.commit()

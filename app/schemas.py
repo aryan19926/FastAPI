@@ -7,6 +7,15 @@ class PostBase(BaseModel):
     content: str
     published: bool = True
 
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class PostCreate(PostBase):
     pass
 
@@ -19,6 +28,7 @@ class PostResponse(PostBase):
     id: int
     created_at: datetime
     owner_id: int 
+    owner: UserResponse
  
     class Config:
         from_attributes = True
@@ -27,13 +37,6 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
-class UserResponse(BaseModel):
-    id: int
-    email: EmailStr
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 class UserLogin(BaseModel):
     email: EmailStr
